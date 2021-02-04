@@ -27,5 +27,7 @@ def calc_mean_std(dataset):
 
         mean /= len(loader.dataset)
         std /= len(loader.dataset)
+        mean = mean.numpy()
+        std = std.numpy()
         print(f'Mean: {mean}, Std: {std}')
         return mean, std
