@@ -2,8 +2,10 @@ import matplotlib.pyplot as plt
 from analytics.gradcam.gradcam_util import *
 from util.un_normalize import UnNormalize
 
-def generate_gradcam(model, data, device, target_layers, mean, std, classes):
+def generate_gradcam(model, test_loader, device, target_layers, mean, std, classes):
 
+    data, target = next(iter(test_loader))
+    
     data, target = data.to(device), target.to(device) # Sending to Gradcam
 
     gcam_layers, predicted_probs, predicted_classes = get_gradcam(data, target, model, device, target_layers)
