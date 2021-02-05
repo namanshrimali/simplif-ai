@@ -1,6 +1,8 @@
 from analytics.gradcam.gradcam import GradCAM
 import matplotlib.pyplot as plt
-
+import torch
+import numpy as np
+import cv2
 '''
     Takes input as images, labels, device and target layers and returns model predictions and 
     Args:
@@ -59,7 +61,7 @@ def plt_gradcam(gcam_layers, images, target_labels, predicted_labels, class_labe
     for image_idx, image in enumerate(images):
 
         # un-normalize the image
-        denorm_img = denormalize(image.permute(2, 0, 1)).permute(1, 2, 0)
+        denorm_img = un_normalize(image.permute(2, 0, 1)).permute(1, 2, 0)
 
         axs[image_idx, 0].text(
             0.5, 0.5, f'predicted: {class_labels[predicted_labels[image_idx][0] ]}\nactual: {class_labels[target_labels[image_idx]] }', horizontalalignment='center', verticalalignment='center', fontsize=14, )
