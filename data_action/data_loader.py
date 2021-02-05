@@ -1,16 +1,14 @@
 from data_action.transformations import *
-from util.mean_std_calc import calc_mean_std
 
 class Data_Loader:
-    def __init__(self, device, batch_size, dataset, transform_type='pmda'):
+    def __init__(self, device, batch_size, dataset, mean, std, transform_type='pmda'):
         self.device = device
         self.batch_size = batch_size
         self.transform_type = transform_type
         self.dataset = dataset
         self.kwargs = {'num_workers': 2, 'pin_memory': True} if device=="cuda" else {}
-        self.mean, self.std = calc_mean_std(dataset)
-        # self.mean = [0.4913997551666284, 0.48215855929893703, 0.4465309133731618]
-        # self.std = [0.24703225141799082, 0.24348516474564, 0.26158783926049628]
+        self.mean = mean
+        self.std = std
     
     def load_training_data(self):
         print(f'Loading training data. Dataset: {self.dataset}')

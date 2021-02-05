@@ -8,6 +8,7 @@ def plot_images(data_iterable, classes, total= 5):
     images, actual, *predicted = data_iterable.__next__()
     images = images/2 + 0.5 #un-normalize
     plt.figure(figsize=(30, 30))
+    plt.style.use("dark_background")
 
     if predicted == []:
         for image_num in range(total):
