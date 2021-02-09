@@ -4,11 +4,10 @@ import torch.nn as nn
 import torch.optim as optim
 
 
-def train(model, device, train_loader, train_loss, train_accuracy, optimizer):
+def train(model, device, train_loader, train_loss, train_accuracy, optimizer, criterion = nn.CrossEntropyLoss()):
     correct = 0
     processed = 0
     model.train()
-    criterion = nn.CrossEntropyLoss()
     pbar = tqdm(train_loader, position = 0, leave = True)
     
     for batch_idx, (data, target) in enumerate(pbar):

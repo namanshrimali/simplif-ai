@@ -29,3 +29,5 @@ def test(model, device, test_loader, test_losses, test_accuracy, misclassified =
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
     test_accuracy.append(100. * correct / len(test_loader.dataset))
+    
+    return test_loss
