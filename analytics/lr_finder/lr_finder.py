@@ -437,11 +437,16 @@ class LRFinder(object):
 
         return running_loss / len(val_iter.dataset)
     
-    def find_optimal_lr_loss(self, lrs= self.history["lr"], losses= self.history["loss"]):
-        print("LR suggestion: steepest gradient")
+    def find_optimal_lr_loss(self, lrs = None, losses = None):
         optimal_lr = None
         optimal_loss = None
         min_grad_idx = None
+        
+        if lrs is None:
+            lrs= self.history["lr"]
+        if losses is None:
+            losses= self.history["loss"]
+        
         try:
             min_grad_idx = (np.gradient(np.array(losses))).argmin()
         except ValueError:
@@ -517,6 +522,7 @@ class LRFinder(object):
         ax.plot(lrs, losses)
         # Plot the suggested LR
         if suggest_lr:
+            print("LR suggestion: steepest gradient")
             # 'steepest': the point with steepest gradient (minimal gradient)
             optimal_lr, optimal_loss = self.find_optimal_lr_loss(lrs, losses)
             if optimal_lr is not None:

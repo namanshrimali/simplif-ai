@@ -1,4 +1,4 @@
-from lr_finder import LRFinder
+from analytics.lr_finder.lr_finder import LRFinder
 
 def find_me_ideal_lr(model, optimizer, criterion, trainloader, device, plot_graph = False, num_iter = 100, step_mode = "linear"):
     lr_finder = LRFinder(model, optimizer, criterion, device=device)
@@ -12,7 +12,7 @@ def find_me_ideal_lr(model, optimizer, criterion, trainloader, device, plot_grap
             log_lr=True,
             show_lr=None,
             ax=None,
-            suggest_lr=False,
+            suggest_lr=True,
         )
     lr_finder.reset()
     return optimal_lr
