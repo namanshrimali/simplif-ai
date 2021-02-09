@@ -15,7 +15,7 @@ class Data_Loader:
         trainloader = None
         if self.dataset == 'CIFAR10':
             trainloader = torch.utils.data.DataLoader(
-                torchvision.datasets.CIFAR10(root='data', train=True, download=True, transform=get_transforms(self.transform_type, self.mean, self.std)), 
+                torchvision.datasets.CIFAR10(root='../data', train=True, download=True, transform=get_transforms(self.transform_type, self.mean, self.std)), 
                 self.batch_size,
                 shuffle=True,
                 **self.kwargs)
@@ -27,7 +27,7 @@ class Data_Loader:
         testloader = None
         if self.dataset == 'CIFAR10':
             testloader = torch.utils.data.DataLoader(
-                torchvision.datasets.CIFAR10(root='data', train=False, download=True, transform=get_transforms('pmda', self.mean, self.std)),
+                torchvision.datasets.CIFAR10(root='../data', train=False, download=True, transform=get_transforms('pmda', self.mean, self.std)),
                 self.batch_size,
                 shuffle=False, 
                 **self.kwargs)

@@ -6,7 +6,7 @@ def calc_mean_std(dataset):
     if dataset == 'CIFAR10':
         
         loader = torch.utils.data.DataLoader(
-            torchvision.datasets.CIFAR10(root='data',
+            torchvision.datasets.CIFAR10(root='../data',
             download=True,
             transform= transforms.Compose([
                 transforms.ToTensor()
