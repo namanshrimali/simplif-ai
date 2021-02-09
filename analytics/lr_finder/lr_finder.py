@@ -436,7 +436,25 @@ class LRFinder(object):
                 running_loss += loss.item() * len(labels)
 
         return running_loss / len(val_iter.dataset)
-
+    
+    def find_optimal_lr_loss(self, lrs= self.history["lr"], losses= self.history["loss"]):
+        print("LR suggestion: steepest gradient")
+        optimal_lr = None
+        optimal_loss = None
+        min_grad_idx = None
+        try:
+            min_grad_idx = (np.gradient(np.array(losses))).argmin()
+        except ValueError:
+            print(
+                "Failed to compute the gradients, there might not be enough points."
+            )
+        if min_grad_idx is not None:
+            optimal_lr = lrs[min_grad_idx]
+            optimal_loss = losses[min_grad_idx]
+            
+        return optimal_lr, optimal_loss
+        
+        
     def plot(
         self,
         skip_start=10,
@@ -481,6 +499,8 @@ class LRFinder(object):
         # properly so the behaviour is the expected
         lrs = self.history["lr"]
         losses = self.history["loss"]
+        optimal_lr = None
+        
         if skip_end == 0:
             lrs = lrs[skip_start:]
             losses = losses[skip_start:]
@@ -495,23 +515,15 @@ class LRFinder(object):
 
         # Plot loss as a function of the learning rate
         ax.plot(lrs, losses)
-
         # Plot the suggested LR
         if suggest_lr:
             # 'steepest': the point with steepest gradient (minimal gradient)
-            print("LR suggestion: steepest gradient")
-            min_grad_idx = None
-            try:
-                min_grad_idx = (np.gradient(np.array(losses))).argmin()
-            except ValueError:
-                print(
-                    "Failed to compute the gradients, there might not be enough points."
-                )
-            if min_grad_idx is not None:
-                print("Suggested LR: {:.2E}".format(lrs[min_grad_idx]))
+            optimal_lr, optimal_loss = self.find_optimal_lr_loss(lrs, losses)
+            if optimal_lr is not None:
+                print("Suggested LR: {:.2E}".format(optimal_lr))
                 ax.scatter(
-                    lrs[min_grad_idx],
-                    losses[min_grad_idx],
+                    optimal_lr,
+                    optimal_loss,
                     s=75,
                     marker="o",
                     color="red",
@@ -532,8 +544,8 @@ class LRFinder(object):
         if fig is not None:
             plt.show()
 
-        if suggest_lr and min_grad_idx is not None:
-            return ax, lrs[min_grad_idx]
+        if suggest_lr and optimal_lr is not None:
+            return ax, optimal_lr
         else:
             return ax
 
