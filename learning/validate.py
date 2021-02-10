@@ -15,7 +15,7 @@ def test(model, device, test_loader, test_losses, test_accuracy, misclassified =
 
             for focussed_data, prediction, actual in zip(data, pred, target):
                 if prediction != actual:
-                    misclassified.append([focussed_data.cpu(), actual, prediction])
+                    misclassified.append([focussed_data, actual, prediction])
 
 
             correct += pred.eq(target.view_as(pred)).sum().item()
