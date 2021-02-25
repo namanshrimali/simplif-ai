@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.optim as optim
 
 
-def train(model, device, train_loader, train_loss, train_accuracy, optimizer, criterion = nn.CrossEntropyLoss()):
+def train(model, device, train_loader, train_loss, train_accuracy, optimizer, scheduler = None, criterion = nn.CrossEntropyLoss()):
     correct = 0
     processed = 0
     model.train()
@@ -22,6 +22,8 @@ def train(model, device, train_loader, train_loss, train_accuracy, optimizer, cr
         train_loss.append(loss)
         loss.backward()
         optimizer.step()
+        if scheduler is not None:
+            scheduler.step()
 
         pred = output.argmax(dim=1, keepdim=True)
         correct += pred.eq(target.view_as(pred)).sum().item()
