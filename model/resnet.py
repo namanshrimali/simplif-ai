@@ -69,7 +69,7 @@ class Bottleneck(nn.Module):
 
 
 class ResNet(nn.Module):
-    def __init__(self, block, num_blocks, dropout=0.0, num_classes=10):
+    def __init__(self, block, num_blocks, num_classes, dropout=0.0):
         super(ResNet, self).__init__()
         self.in_planes = 64
 
@@ -101,29 +101,21 @@ class ResNet(nn.Module):
         return F.log_softmax(out, dim=1)
 
 
-def ResNet18(dropout):
-    return ResNet(BasicBlock, [2, 2, 2, 2], dropout)
+def ResNet18(dropout, num_classes=10):
+    return ResNet(block= BasicBlock, num_blocks= [2, 2, 2, 2], num_classes= num_classes, dropout= dropout)
 
 
-def ResNet34():
-    return ResNet(BasicBlock, [3, 4, 6, 3])
+def ResNet34(dropout, num_classes=10):
+    return ResNet(BasicBlock, [3, 4, 6, 3], num_classes= num_classes)
 
 
-def ResNet50():
-    return ResNet(Bottleneck, [3, 4, 6, 3])
+def ResNet50(dropout, num_classes=10):
+    return ResNet(Bottleneck, [3, 4, 6, 3], num_classes= num_classes)
 
 
-def ResNet101():
-    return ResNet(Bottleneck, [3, 4, 23, 3])
+def ResNet101(dropout, num_classes=10):
+    return ResNet(Bottleneck, [3, 4, 23, 3], num_classes= num_classes)
 
 
-def ResNet152():
-    return ResNet(Bottleneck, [3, 8, 36, 3])
-
-
-def test():
-    net = ResNet18()
-    y = net(torch.randn(1, 3, 32, 32))
-    print(y.size())
-
-# test()
+def ResNet152(dropout, num_classes=10):
+    return ResNet(Bottleneck, [3, 8, 36, 3], num_classes= num_classes)
