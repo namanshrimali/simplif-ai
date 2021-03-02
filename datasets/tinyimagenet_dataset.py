@@ -1,57 +1,28 @@
-import requests
-from requests import get, HTTPError
 from torch.utils.data import Dataset
-import zipfile
-import os
+from util.tiny_imagenet_datasource import TinyImageNetDataSource
+
 
 class TinyImageNetDataset(Dataset):
-    download_directory = '../data'
-    url = 'http://cs231n.stanford.edu'
-    filename = 'tiny-imagenet-200.zip'
     
-    def __init__(self, test_split, train_split, transform= None, train= True) -> None:        
-        
-        self.train_split = train_split/(train_split + test_split)
-        self.test_split = 1 - train_split
-        
+    def __init__(self, data_source, train = False, transform = None):  
+        if not isinstance(data_source, TinyImageNetDataSource):
+            print('Please send a vaid datasource instance')
+            raise TypeError('{} is not an DataSource'.format(
+                type(data_source).__name__))
+            
         self.transform = transform
-        
-        if (not os.path.isdir(self.download_directory)) or (len(os.listdir(self.download_directory)) == 0):
-            self._download_and_extract()
-        else: 
-            print('Files already downloaded and verified')
-            
-        self._get_id_dictionary()
-          
-    def _download_and_extract(self):
-        print(f'Downloading {self.url}/{self.filename} to {self.download_directory}/{self.filename}')
-            
-        try:
-            resp = requests.get(f"{self.url}/{self.filename}", allow_redirects=True, stream=True)
-        except HTTPError as http_error:
-            print(f'HTTP error occurred: {http_error}')
-        except Exception as exception:
-            print(f'Other error occurred: {exception}')
+        self.dataset = None
+        if train:
+            self.dataset = data_source.get_trainset()
         else:
-            print("Dataset downloaded successfully")
+            self.dataset = data_source.get_testset()
+          
             
-        filename = f"{self.filename}"
-        zfile = open(filename, 'wb')
-        zfile.write(resp.content)
-        zfile.close()
+    def __getitem__(self, index):
+        image = self.dataset[index][0]
+        y_label = self.dataset[index][1]
         
-        print(f'Extracting {self.download_directory}/{filename} to {self.download_directory}')
+        if self.transform:
+            image = self.transform(image)
 
-        zipf = zipfile.ZipFile(filename, 'r')  
-        zipf.extractall(self.download_directory)
-        zipf.close()
-
-        os.remove(filename)
-    
-    def _get_id_dictionary(self):
-        id_dict = {}
-        for i, line in enumerate(open(f"{self.download_directory}/{self.filename}/wnids.txt", 'r')):
-            id_dict[line.replace('\n', '')] = i
-        print(id_dict)
-        return id_dict
-    
+        return image, y_label
