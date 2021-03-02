@@ -4,7 +4,6 @@ from skimage import io
 import torch
 import requests
 from requests import get, HTTPError
-from util.mean_std_calc import calc_mean_std
 
 
 class TinyImageNetDataSource():
@@ -27,7 +26,7 @@ class TinyImageNetDataSource():
             test_data_len = int(test_split * dataset_len)
             train_data_len = dataset_len - test_data_len
             self.train_data, self.test_data = torch.utils.data.random_split(dataset, [train_data_len, test_data_len])
-            self.mean, self.std = calc_mean_std(dataset)
+            self.mean, self.std = ([0.4914, 0.4822, 0.4465], [0.2023, 0.1994, 0.2010])
             
     def _download_and_extract(self):
         print(f'Downloading {self.url}/{self.filename} to {self.download_directory}/{self.filename}')
