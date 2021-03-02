@@ -21,7 +21,7 @@ class TinyImageNetDataset(Dataset):
         else: 
             print('Files already downloaded and verified')
             
-        _get_id_dictionary()
+        self._get_id_dictionary()
           
     def _download_and_extract(self):
         print(f'Downloading {self.url}/{self.filename} to {self.download_directory}/{self.filename}')
@@ -50,7 +50,7 @@ class TinyImageNetDataset(Dataset):
     
     def _get_id_dictionary(self):
         id_dict = {}
-        for i, line in enumerate(open(f"{self.download_directory}/wnids.txt", 'r')):
+        for i, line in enumerate(open(f"{self.download_directory}/{self.filename}/wnids.txt", 'r')):
             id_dict[line.replace('\n', '')] = i
         print(id_dict)
         return id_dict
