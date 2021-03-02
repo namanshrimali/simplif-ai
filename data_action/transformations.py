@@ -8,7 +8,7 @@ from augumentations.commonly_used_augumentation import *
 import numpy as np
 
 # requires installation of albumentations
-def get_transforms(transform_type, mean, standard_deviation):
+def get_transforms(transform_type, mean, standard_deviation, height=32, width=32):
     if transform_type == 'pmda':
         aug = A.Compose(
             get_poor_man_data_aug(mean, standard_deviation)
@@ -17,7 +17,7 @@ def get_transforms(transform_type, mean, standard_deviation):
 
     elif transform_type == 'mmda':
         aug = A.Compose(
-            get_middle_man_data_aug(mean, standard_deviation)
+            get_middle_man_data_aug(mean, standard_deviation, height=height, width=width)
             )
         return lambda img:aug(image=np.array(img))["image"]
     elif transform_type == 'common':

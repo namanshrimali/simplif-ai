@@ -4,18 +4,18 @@ from util.tiny_imagenet_datasource import TinyImageNetDataSource
 
 class TinyImageNetDataset(Dataset):
     
-    def __init__(self, data_source, train = False, transform = None):  
-        if not isinstance(data_source, TinyImageNetDataSource):
+    def __init__(self, datasource, train = False, transform = None):  
+        if not isinstance(datasource, TinyImageNetDataSource):
             print('Please send a vaid datasource instance')
             raise TypeError('{} is not an DataSource'.format(
-                type(data_source).__name__))
+                type(datasource).__name__))
             
         self.transform = transform
         self.dataset = None
         if train:
-            self.dataset = data_source.get_trainset()
+            self.dataset = datasource.get_trainset()
         else:
-            self.dataset = data_source.get_testset()
+            self.dataset = datasource.get_testset()
           
             
     def __getitem__(self, index):
@@ -26,3 +26,6 @@ class TinyImageNetDataset(Dataset):
             image = self.transform(image)
 
         return image, y_label
+    
+    def __len__(self):
+        return len(self.dataset)

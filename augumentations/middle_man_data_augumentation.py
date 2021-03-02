@@ -1,7 +1,7 @@
 import albumentations as A
 from albumentations.pytorch import ToTensor
 
-def get_middle_man_data_aug(mean, standard_deviation, height=32, width=32):
+def get_middle_man_data_aug(mean, standard_deviation, height, width):
     return [
         A.Normalize(mean=mean, std=standard_deviation, always_apply=True, p=1.0),
         A.PadIfNeeded(min_height=height+8, min_width=width+8),

@@ -18,7 +18,7 @@ class CustomDataLoader():
         trainloader = None
         if self.dataset == 'TINY-IMAGENET':
             trainloader = torch.utils.data.DataLoader(
-                TinyImageNetDataset(dataasource = self.datasource, train=True, transform=get_transforms(transform_type, self.datasource.mean, self.datasource.std)), 
+                TinyImageNetDataset(datasource = self.datasource, train=True, transform=get_transforms(transform_type, self.datasource.mean, self.datasource.std, height=64, width=64)), 
                 self.batch_size,
                 shuffle=True,
                 **self.kwargs)
@@ -30,7 +30,7 @@ class CustomDataLoader():
         testloader = None
         if self.dataset == 'TINY-IMAGENET':
             testloader = torch.utils.data.DataLoader(
-                TinyImageNetDataset(dataasource = self.datasource, train=False, transform=get_transforms('pmda', self.datasource.mean, self.datasource.std)),
+                TinyImageNetDataset(datasource = self.datasource, train=False, transform=get_transforms('pmda', self.datasource.mean, self.datasource.std)),
                 self.batch_size,
                 shuffle=False, 
                 **self.kwargs)
