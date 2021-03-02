@@ -24,7 +24,7 @@ class TinyImageNetDataSource():
             dataset = self._get_data()
             
             dataset_len = len(dataset)
-            test_data_len = test_split * dataset_len
+            test_data_len = int(test_split * dataset_len)
             train_data_len = dataset_len - test_data_len
             self.train_data, self.test_data = torch.utils.data.random_split(dataset, [train_data_len, test_data_len])
             self.mean, self.std = calc_mean_std(dataset)
@@ -78,12 +78,12 @@ class TinyImageNetDataSource():
         id_dict = self._get_id_dictionary()
         
         for (class_id, class_number) in id_dict.items():
-            print(f'Loading {class_id}')
             img_path = f'{self.download_directory}/{self.sub_directory}/train/{class_id}/images'
             
             for img_num in range(self.image_per_class):
                 image_path = f"{img_path}/{class_id}_{img_num}.JPEG"
-                dataset.append((io.imread(image_path), class_number))              
+                dataset.append((io.imread(image_path), class_number))       
+        print('Data loaded successfully')       
         return dataset
     
     def get_trainset(self):
