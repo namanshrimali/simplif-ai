@@ -1,10 +1,9 @@
 import os
 import zipfile
-from skimage import io
 import torch
 import requests
 from requests import get, HTTPError
-
+from PIL import Image
 
 class TinyImageNetDataSource():
     download_directory = '../data'
@@ -21,7 +20,6 @@ class TinyImageNetDataSource():
                 print('Files already downloaded and verified')
             
             dataset = self._get_data()
-            
             dataset_len = len(dataset)
             test_data_len = int(test_split * dataset_len)
             train_data_len = dataset_len - test_data_len
@@ -59,15 +57,15 @@ class TinyImageNetDataSource():
             id_dict[line.replace('\n', '')] = i
         return id_dict
     
-    def _get_class_to_id_dict(self):
+    def get_class_list(self):
         id_dict = self._get_id_dictionary()
         all_classes = {}
-        result = {}
+        result = [None]*self.num_classes
         for _, line in enumerate(open(f"{self.download_directory}/{self.sub_directory}/words.txt", 'r')):
             n_id, word = line.split('\t')[:2]
             all_classes[n_id] = word
         for key, value in id_dict.items():
-            result[value] = (key, all_classes[key])
+            result[value] = all_classes[key]
         return result
     
     def _get_data(self):
@@ -81,7 +79,9 @@ class TinyImageNetDataSource():
             
             for img_num in range(self.image_per_class):
                 image_path = f"{img_path}/{class_id}_{img_num}.JPEG"
-                dataset.append((io.imread(image_path), class_number))       
+                image = Image.open(image_path)
+                image = image.convert("RGB")
+                dataset.append((image, class_number))       
         print('Data loaded successfully')       
         return dataset
     

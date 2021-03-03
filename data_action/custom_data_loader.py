@@ -12,13 +12,14 @@ class CustomDataLoader():
         self.kwargs = {'num_workers': 2, 'pin_memory': True} if device=="cuda" else {}
         self.device = device
         self.batch_size = batch_size
+        self.class_list = self.datasource.get_class_list()
         
     def load_training_data(self, transform_type):
         print(f'Loading training data. Dataset: {self.dataset}')
         trainloader = None
         if self.dataset == 'TINY-IMAGENET':
             trainloader = torch.utils.data.DataLoader(
-                TinyImageNetDataset(datasource = self.datasource, train=True, transform=get_transforms(transform_type, self.datasource.mean, self.datasource.std, height=64, width=64)), 
+                TinyImageNetDataset(datasource = self.datasource, device= self.device, train=True, transform=get_transforms(transform_type, self.datasource.mean, self.datasource.std, height=64, width=64)), 
                 self.batch_size,
                 shuffle=True,
                 **self.kwargs)
@@ -30,7 +31,7 @@ class CustomDataLoader():
         testloader = None
         if self.dataset == 'TINY-IMAGENET':
             testloader = torch.utils.data.DataLoader(
-                TinyImageNetDataset(datasource = self.datasource, train=False, transform=get_transforms('pmda', self.datasource.mean, self.datasource.std)),
+                TinyImageNetDataset(datasource = self.datasource, device= self.device, train=False, transform=get_transforms('pmda', self.datasource.mean, self.datasource.std)),
                 self.batch_size,
                 shuffle=False, 
                 **self.kwargs)
